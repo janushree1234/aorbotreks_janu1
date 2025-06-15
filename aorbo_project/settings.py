@@ -4,19 +4,15 @@ Django settings for aorbo_project project.
 
 from pathlib import Path
 import os
-import dj_database_url  # For parsing DATABASE_URL from Render
+import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-dev-key")  # Load from env
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-dev-key")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# Allow your Render deployment
-ALLOWED_HOSTS = ['*']  # You can set ['aorbo-django-app.onrender.com'] for safety
+ALLOWED_HOSTS = ['*']  # You can restrict this to ['aorbo-django-app.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -31,7 +27,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files on Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Enables WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,11 +56,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'aorbo_project.wsgi.application'
 
-# Database: use MySQL locally, but PostgreSQL on Render via DATABASE_URL
+# ✅ Database settings: PostgreSQL on Render, MySQL locally
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
 else:
     DATABASES = {
@@ -95,29 +91,25 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# ✅ Static and media settings
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ Required for Render
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# WhiteNoise settings for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security and proxy
+# ✅ Secure proxy settings for Render
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
-# CSRF trusted origins for local dev tunnels or Render
 CSRF_TRUSTED_ORIGINS = [
     'https://*.ngrok-free.app',
     'http://*.ngrok-free.app',
-    'https://*.onrender.com'
+    'https://*.onrender.com',
 ]
