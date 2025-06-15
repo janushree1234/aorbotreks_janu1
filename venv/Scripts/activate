@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\user\Downloads\aorbotreks_web\aorbo_website100\aorbo_website\venv"
+VIRTUAL_ENV="C:\Users\user\Downloads\web_application\aorbo_website\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
