@@ -1,1 +1,1 @@
-web: gunicorn aorbo_website.wsgi:application
+web: gunicorn aorbo_project.wsgi:application
